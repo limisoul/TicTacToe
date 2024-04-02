@@ -106,6 +106,9 @@
 
 </body>
 <script>
+  /**
+   * 跳转到模式选择页面点击事件
+   */
   const StartGame = function () {
     // 如果遮罩显示将其收起
     userSilentTime = 0
@@ -121,7 +124,7 @@
 
     // 动画结束后跳转
     setTimeout(() => {
-      window.location.href = 'src/home.html'
+      window.location.href = 'src/modeSelection.html'
     }, 1000)
   }
 
@@ -136,7 +139,7 @@
 
   // 判断用户是否还在操作
   let userSilentTime = 0    // 用户操作计时器
-  const SILENTLIMIT  = 800  // 未操作时间限制
+  const SILENT_LIMIT = 800  // 未操作时间限制
   window.addEventListener('mousemove', function () {
     userSilentTime = 0
     Mask.Close()
@@ -146,7 +149,7 @@
     userSilentTime += Time.deltaTime
 
     // 用户长时间未点击
-    if (userSilentTime >= SILENTLIMIT) {
+    if (userSilentTime >= SILENT_LIMIT) {
       Mask.Open()
     }
 

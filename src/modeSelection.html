@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>井字棋</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/icon.js"></script>
+  <style>
+    #app {
+      display:          flex;
+      justify-content:  center;
+      align-items:      center;
+      position:         absolute;
+      left:             0;
+      top:              0;
+      width:            100vw;
+      height:           100vh;
+      opacity:          0;
+      filter:           blur(20px);
+      transition:       .4s ease-in-out;
+    }
+
+    #title {
+      position:         absolute;
+      left:             50%;
+      top:              40%;
+      transform:        translate(-50%, -50%);
+      color:            var(--text_color);
+      font-size:        var(--title_size);
+      font-weight:      bold;
+    }
+
+    .choose {
+      display:          flex;
+      justify-content:  center;
+      align-items:      center;
+      padding:          20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="title"></div>
+    <div class="choose">
+      <button class="button" onmousedown="GotoGameBoard(false, false)">玩家对弈</button>
+    </div>
+    <div class="choose">
+      <button class="button" onmousedown="GotoGameBoard(true, false)">人机对弈</button>
+    </div>
+  </div>
+</body>
+<script>
+  // 初始化title
+  document.querySelector('#title').innerHTML = `${Unicode.logo} 井字棋`
+
+  // 初始化显示
+  const APP = document.querySelector('#app')
+  setTimeout(() => {
+    APP.style.opacity = '1'
+    APP.style.filter  = 'blur(0)'
+  }, 20)
+
+  /**
+   * 跳转到游戏页面
+   * @param {boolean} isAIMode 是否为人机对弈模式
+   * @param {boolean} isContinue 是否继续游戏
+   */
+  const GotoGameBoard = function (isAIMode, isContinue) {
+    window.location.href = `gameBoard.html?isAIMode=${isAIMode}&isContinue=${isContinue}`
+  }
+
+  // 对移动端进行适配
+  const WINDOW_WIDTH   = window.innerWidth
+  const WINDOW_HEIGHT  = window.innerHeight
+  if (WINDOW_WIDTH < WINDOW_HEIGHT) {
+    document.querySelector('#app').style.flexDirection = 'column'
+  }
+</script>
+</html>
