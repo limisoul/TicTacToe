@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title></title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="src/css/style.css">
   <meta name="description" content="">
 
   <meta property="og:title" content="">
@@ -19,14 +20,145 @@
 
   <link rel="manifest" href="site.webmanifest">
   <meta name="theme-color" content="#fafafa">
+
+  <script src="js/app.js"></script>
+  <script src="src/js/icon.js"></script>
+  <script src="src/js/time.js"></script>
+
+  <style>
+    button {
+      position:       absolute;
+      left:           50%;
+      top:            50%;
+      transform:      translate(-50%, -50%);
+      z-index:        3;
+    }
+
+    .button:hover {
+      transform:      translate(-50%, -50%) scale(1.2);
+    }
+
+    #curtain {
+      position:       fixed;
+      left:           0;
+      top:            -5vh;
+      width:          100vw;
+      height:         105vh;
+      background:     var(--bg_color);
+      transition:     .6s ease-in-out;
+    }
+
+    #mask {
+      position:       absolute;
+      left:           50%;
+      top:            50%;
+      transform:      translate(-50%, -50%);
+      width:          100vw;
+      height:         105vh;
+      background:     white;
+      border-radius:  0;
+      transition:     .4s ease-in-out;
+      z-index:        2;
+    }
+
+    #tips {
+      position:       absolute;
+      left:           50%;
+      top:            60%;
+      transform:      translate(-50%, -50%);
+      color:          var(--text_color);
+      font-size:      var(--text_size);
+      z-index:        1;
+    }
+
+    body {
+      background:     var(--bg_color);
+    }
+
+    @keyframes p_float {
+      0%, 100% {
+        transform:    translate(0, -20px);
+      }
+      60% {
+        transform:    translate(0);
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- Add your site or application content here -->
-  <p>Hello world! This is HTML5 Boilerplate.</p>
-  <script src="js/app.js"></script>
+<!-- Add your site or application content here -->
+<!--  <p>Hello world! This is HTML5 Boilerplate.</p>-->
+<div id="curtain">
+  <div id="mask"></div>
+  <button class="button" onmousedown="StartGame()">开始游戏</button>
+  <div id="tips"></div>
+</div>
 
 </body>
+<script>
+  const StartGame = function () {
+    // 幕布打开动画
+    const curtain = document.querySelector('#curtain')
 
+    curtain.style.transform   = 'translate(0, 5vh)'
+    setTimeout(() => {
+      curtain.style.transform = 'translate(0, -100vh)'
+    }, 400)
+
+    // 动画结束后跳转
+    setTimeout(() => {
+      window.location.href = 'src/home.html'
+    }, 1000)
+  }
+
+  // 初始化tips
+  document.querySelector('#tips').innerHTML = `
+    <p style="text-align: center; animation: p_float 2s infinite;">${Unicode.arrow_up}</p>
+    <p>点击以开始</p>
+  `
+
+  // 判断用户是否还在操作
+  let userSilentTime = 0    // 用户操作计时器
+  const SILENTLIMIT  = 800  // 未操作时间限制
+  window.addEventListener('mousemove', function () {
+    userSilentTime = 0
+    Mask.Close()
+  })
+
+  const Update = function () {
+    userSilentTime += Time.deltaTime
+
+    // 用户长时间未点击
+    if (userSilentTime >= SILENTLIMIT) {
+      Mask.Open()
+    }
+
+    requestAnimationFrame(Update)
+  }
+  Update()
+
+  class Mask {
+    static component = document.querySelector('#mask')
+
+    /**
+     * 显示遮罩层
+     */
+    static Open() {
+      this.component.style.width  = '140px'
+      this.component.style.height = '80px'
+      this.component.style.borderRadius = '50%'
+    }
+
+    /**
+     * 关闭遮罩层
+     */
+    static Close() {
+      this.component.style.width  = '100vw'
+      this.component.style.height = '105vh'
+      this.component.style.borderRadius = '0'
+    }
+  }
+</script>
 </html>
