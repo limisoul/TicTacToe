@@ -21,6 +21,10 @@
   --sub_size:         14px;
 }
 
+body {
+  background:     var(--bg_color);
+}
+
 .button {
   border-radius:      10px;
   height:             40px;

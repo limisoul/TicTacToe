@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+  <title>井字棋</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="src/css/style.css">
   <meta name="description" content="">
@@ -71,8 +71,15 @@
       z-index:        1;
     }
 
-    body {
-      background:     var(--bg_color);
+    #title {
+      position:       absolute;
+      left:           50%;
+      top:            40%;
+      transform:      translate(-50%, -50%);
+      color:          var(--text_color);
+      font-size:      var(--title_size);
+      font-weight:    bold;
+      z-index:        3;
     }
 
     @keyframes p_float {
@@ -91,6 +98,7 @@
 <!-- Add your site or application content here -->
 <!--  <p>Hello world! This is HTML5 Boilerplate.</p>-->
 <div id="curtain">
+  <div id="title"></div>
   <div id="mask"></div>
   <button class="button" onmousedown="StartGame()">开始游戏</button>
   <div id="tips"></div>
@@ -122,6 +130,9 @@
     <p style="text-align: center; animation: p_float 2s infinite;">${Unicode.arrow_up}</p>
     <p>点击以开始</p>
   `
+
+  // 初始化title
+  document.querySelector('#title').innerHTML = `${Unicode.logo} 井字棋`
 
   // 判断用户是否还在操作
   let userSilentTime = 0    // 用户操作计时器
