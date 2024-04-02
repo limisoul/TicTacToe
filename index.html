@@ -99,6 +99,10 @@
 </body>
 <script>
   const StartGame = function () {
+    // 如果遮罩显示将其收起
+    userSilentTime = 0
+    Mask.Close()
+
     // 幕布打开动画
     const curtain = document.querySelector('#curtain')
 
