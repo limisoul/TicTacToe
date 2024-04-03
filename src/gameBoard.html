@@ -3,14 +3,179 @@
 <head>
   <meta charset="UTF-8">
   <title>井字棋</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/icon.js"></script>
+  <script src="js/guiFunction.js"></script>
+  <script src="js/dataBase.js"></script>
+  <style>
+    #scoreboard {
+      position:         fixed;
+      top:              -225px;
+      left:             50%;
+      transform:        translate(-50%);
+      width:            450px;
+      height:           225px;
+      background:       linear-gradient(-70deg, #ffcc00 50%, #6699ff 50%);
+      display:          flex;
+      align-items:      center;
+      justify-content:  space-around;
+      border-radius:    10px;
+      font-size:        var(--chess_size);
+      transition:       .4s ease-in-out, top .8s ease-in-out;
+    }
+
+    #cross {
+      color:            var(--main_color_1);
+    }
+
+    #nought {
+      color:            var(--main_color_2);
+    }
+
+    #gameBoard {
+      position:         fixed;
+      top:              50%;
+      left:             50%;
+      transform:        translate(-50%, -50%);
+      width:            450px;
+      height:           450px;
+      border-radius:    10px;
+      transition:       .4s ease-in-out;
+    }
+
+    #console {
+      position:         fixed;
+      bottom:           -136px;
+      left:             50%;
+      transform:        translate(-50%);
+      width:            450px;
+      height:           136px;
+      font-size:        var(--chess_size);
+      display:          flex;
+      justify-content:  space-around;
+      align-items:      center;
+      border-radius:    10px;
+      background:       #6699ff;
+      transition:       .4s ease-in-out, bottom .8s ease-in-out;
+    }
+
+    #return {
+
+    }
+
+    #reset {
+      font-size:        calc(var(--chess_size) - 15px); /* 保证视觉大小一致 */
+      transform:        rotate(0) scale(1);
+    }
+
+    #audio {
+    }
+
+    #mode {
+      position:         absolute;
+      left:             50%;
+      top:              -40px;
+      transform:        translate(-50%);
+      color:            var(--text_color);
+      font-size:        var(--title_size);
+    }
+
+    .consoleButton {
+      height:           auto;
+      background:       none;
+      color:            var(--main_color_1);
+      font-size:        var(--chess_size);
+    }
+  </style>
 </head>
 <body>
+  <!--记分板-->
+  <div id="scoreboard">
+    <div id="cross"></div>
+    <div id="nought"></div>
+  </div>
 
+  <!--游戏板-->
+  <div id="gameBoard"></div>
+
+  <!--控制台-->
+  <div id="console">
+    <div id="return" class="consoleButton button" onmousedown="Return()"></div>
+    <div id="reset"  class="consoleButton button" onmousedown="Reset.Reset()"
+         onmouseenter="Reset.Hover()" onmouseleave="Reset.Recover()"></div>
+    <div id="audio"  class="consoleButton button" onmousedown="ToggleAudio()"></div>
+    <div id="mode"></div>
+  </div>
 </body>
 <script>
   // 获取游戏模式
   const URL_PARAMS = new URLSearchParams(window.location.search)
+  const isAIMode   = URL_PARAMS.get('isAIMode')   === 'true'
+  const isContinue = URL_PARAMS.get('isContinue') === 'true'
 
-  console.log(URL_PARAMS.get('isAIMode'), URL_PARAMS.get('isContinue'))
+  // 展示分数
+  document.querySelector('#cross').innerHTML  = `${Unicode.chess_cross} 7`
+  document.querySelector('#nought').innerHTML = `2 ${Unicode.chess_nought}`
+
+  // 渲染游戏窗口
+  setTimeout(() => {
+    document.querySelector('#scoreboard').style.top = '20px'
+    document.querySelector('#console').style.bottom = '20px'
+  }, 20)
+  CreateGameBoardLine(document.querySelector('#gameBoard'))
+
+  // 控制台
+  document.querySelector('#return').innerHTML = `${Unicode.arrow_left}`
+  document.querySelector('#reset').innerHTML  = `${Unicode.reset}`
+  document.querySelector('#audio').innerHTML  = `${Unicode.audio_play}`
+  document.querySelector('#mode').innerHTML   = isAIMode ? '人机对弈' : '玩家对弈'
+
+
+  /**
+   * 返回选单
+   */
+  const Return = function () {
+    GuiAnimator.HiddenElement(document.querySelector('#scoreboard'))
+    GuiAnimator.HiddenElement(document.querySelector('#gameBoard'))
+    GuiAnimator.HiddenElement(document.querySelector('#console'))
+
+    setTimeout(() => {
+      window.location.href = 'modeSelection.html'
+    }, 400)
+  }
+
+  /**
+   * 重置按钮相关
+   */
+  class Reset {
+    static ResetIcon = document.querySelector('#reset')
+    static rotate = 0
+
+    /**
+     * 重置棋盘
+     */
+    static Reset() {
+      this.rotate += 180
+      this.ResetIcon.style.transform = `rotate(${this.rotate}deg) scale(1.2)`
+    }
+
+    /**
+     * 因为调整了rotate，重构hover
+     */
+    static Hover() {
+      this.ResetIcon.style.transform = `rotate(${this.rotate}deg) scale(1.2)`
+    }
+    static Recover() {
+      this.ResetIcon.style.transform = `rotate(${this.rotate}deg) scale(1)`
+    }
+  }
+
+  /**
+   * 声音设置
+   */
+  const ToggleAudio = function () {
+    DataBase.isAudioPlay = !DataBase.isAudioPlay
+    document.querySelector('#audio').innerHTML = DataBase.isAudioPlay ? `${Unicode.audio_play}` : `${Unicode.audio_mute}`
+  }
 </script>
 </html>

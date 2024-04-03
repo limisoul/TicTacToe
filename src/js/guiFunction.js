@@ -41,3 +41,48 @@ class GuiAnimator {
     return TransformValue.match(/^matrix\((.+)\)$/)[1].split(',').map(parseFloat)
   }
 }
+
+/**
+ * 创建棋盘线
+ * @param {HTMLDivElement} div
+ */
+const CreateGameBoardLine = function(div) {
+  const BaseLine = function () {
+    const div = document.createElement('div')
+    div.style.position     = 'absolute'
+    div.style.background   = getComputedStyle(document.documentElement).getPropertyValue('--highlight_color')
+    div.style.borderRadius = '3px'
+    div.style.transition   = '.8s ease-in-out'
+
+    return div
+  }
+
+  /**
+   * @param {HTMLDivElement} div
+   * @param {Number[]} position
+   * @param {boolean} scale
+   */
+  const SetTransform = function (div, position, scale) {
+    div.style.left      = position[0] + 'px'
+    div.style.top       = position[1] + 'px'
+    div.style.width     =  scale ? '100%' : '6px'
+    div.style.height    = !scale ? '100%' : '6px'
+    div.style.transform = `matrix(${scale ? .001 : 1}, 0, 0, ${scale ? 1 : .001}, 0, 0)` // .001适配Chrome内核
+  }
+
+  const Line = []
+  for (let i = 0; i < 4; i++) {
+    Line.push(BaseLine())
+
+    setTimeout(() => {
+      Line[i].style.transform = 'matrix(1, 0, 0, 1, 0, 0)'
+    }, 20)
+
+    div.appendChild(Line[i])
+  }
+
+  SetTransform(Line[0], [0, 146], true)
+  SetTransform(Line[1], [0, 298], true)
+  SetTransform(Line[2], [146, 0], false)
+  SetTransform(Line[3], [298, 0], false)
+}

@@ -1,5 +1,5 @@
 const Unicode = {
-  logo: `&#x0F003B`,
+  logo:         `&#x0F003B`,
 
   // 箭头
   arrow_down:   `&#x0F0045`,
@@ -13,4 +13,11 @@ const Unicode = {
 
   audio_play:   `&#xFA7D`,
   audio_mute:   `&#xFA80`,
+
+  setting:      `&#xE615`,
+  reset:        `&#xF569`,
+
+  // 棋子
+  chess_cross:  `&#xEAB8`,
+  chess_nought: `&#xF22D`,
 }

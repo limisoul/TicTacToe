@@ -8,8 +8,8 @@
 
   /*** color ***/
   --bg_color:         #f0f0f0;
-  --main_color_1:     #3498DB;
-  --main_color_2:     #e74c3c;
+  --main_color_2:     #3498DB;
+  --main_color_1:     #e74c3c;
   --text_color:       #0a345b;
   --highlight_color:  #2ecc71;
   --button_color:     #e67e22;
@@ -19,10 +19,15 @@
   --button_size:      18px;
   --text_size:        16px;
   --sub_size:         14px;
+  --chess_size:       100px;
 }
 
 body {
-  background:     var(--bg_color);
+  background:         var(--bg_color);-webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select:none; /* Safari */
+  -moz-user-select:   none; /* Firefox */
+  -ms-user-select:    none; /* Internet Explorer/Edge */
+  user-select:        none; /* Non-prefixed version, currently supported by Chrome, Opera, and Firefox */
 }
 
 .button {
