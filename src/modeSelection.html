@@ -69,7 +69,10 @@
    * @param {boolean} isContinue 是否继续游戏
    */
   const GotoGameBoard = function (isAIMode, isContinue) {
-    window.location.href = `gameBoard.html?isAIMode=${isAIMode}&isContinue=${isContinue}`
+    GuiAnimator.HiddenElement(APP)
+    setTimeout(() => {
+      window.location.href = `gameBoard.html?isAIMode=${isAIMode}&isContinue=${isContinue}`
+    }, 400)
   }
 
   // 对移动端进行适配
