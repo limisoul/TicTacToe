@@ -61,6 +61,7 @@ class GameBoardController {
    */
   static clickEvent(gameBoard) {
     if (!DataBase.isAllowClick) return;
+    DataBase.isAllowClick = false
 
     return function (event) {
       const click = new Vector2(event.clientX, event.clientY)
@@ -121,6 +122,8 @@ class GameBoardController {
 
         DataBase.isGameEnd = true
       }
+
+      DataBase.isAllowClick = true
     }
   }
 
@@ -268,6 +271,7 @@ class SettlementController {
     }
 
     div.style.transform = 'translate(0, -50%) scale(1)'
+    div.style.opacity   = '1'
 
     const root = getComputedStyle(document.documentElement)
 
@@ -298,6 +302,7 @@ class SettlementController {
     }
 
     div.style.transform = 'translate(0, -50%) scale(1, .001)'
+    div.style.opacity   = '0'
     div.innerHTML = ''
   }
 }
