@@ -92,6 +92,11 @@
       font-size:        var(--chess_size);
     }
 
+    .button {
+      width:            80px;
+      text-align:       center;
+    }
+
     .chessPlaceholder {
       position:         relative;
       width:            146px;
@@ -100,6 +105,11 @@
       display:          flex;
       justify-content:  center;
       align-items:      center;
+      transition:       .4s;
+    }
+
+    .chessPlaceholder:hover {
+      transform:        scale(1.2);
     }
   </style>
 </head>

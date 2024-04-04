@@ -132,6 +132,7 @@ class GameBoardController {
     div.style.transform  = 'scale(.8)'
     div.style.width      = '126px'
     div.style.textAlign  = 'center'
+    div.style.cursor     = 'pointer'
 
     return div
   }
