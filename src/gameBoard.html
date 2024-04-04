@@ -5,9 +5,10 @@
   <title>井字棋</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/icon.js"></script>
-  <script src="js/guiFunction.js"></script>
   <script src="js/vector2.js"></script>
+  <script src="js/unionFind.js"></script>
   <script src="js/dataBase.js"></script>
+  <script src="js/guiFunction.js"></script>
   <style>
     #scoreboard {
       position:         fixed;
@@ -41,6 +42,9 @@
       width:            450px;
       height:           450px;
       border-radius:    10px;
+      display:          flex;
+      flex-wrap:        wrap;
+      justify-content:  space-between;
       transition:       .4s ease-in-out;
     }
 
@@ -87,6 +91,16 @@
       color:            var(--main_color_1);
       font-size:        var(--chess_size);
     }
+
+    .chessPlaceholder {
+      position:         relative;
+      width:            146px;
+      height:           146px;
+      margin-bottom:    6px;
+      display:          flex;
+      justify-content:  center;
+      align-items:      center;
+    }
   </style>
 </head>
 <body>
@@ -97,7 +111,17 @@
   </div>
 
   <!--游戏板-->
-  <div id="gameBoard"></div>
+  <div id="gameBoard">
+    <div class="chessPlaceholder"></div>
+    <div class="chessPlaceholder"></div>
+    <div class="chessPlaceholder"></div>
+    <div class="chessPlaceholder"></div>
+    <div class="chessPlaceholder"></div>
+    <div class="chessPlaceholder"></div>
+    <div class="chessPlaceholder"></div>
+    <div class="chessPlaceholder"></div>
+    <div class="chessPlaceholder"></div>
+  </div>
 
   <!--控制台-->
   <div id="console">
@@ -132,6 +156,10 @@
   document.querySelector('#reset').innerHTML  = `${Unicode.reset}`
   document.querySelector('#audio').innerHTML  = `${Unicode.audio_play}`
   document.querySelector('#mode').innerHTML   = isAIMode ? '人机对弈' : '玩家对弈'
+
+
+  // 监听点击棋盘事件
+  GameBoardController.SetClickPositionEvent(document.querySelector('#gameBoard'))
 
 
   /**

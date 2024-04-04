@@ -1,4 +1,5 @@
 // noinspection JSUnusedGlobalSymbols
+// 依赖项：dataBase.js, icon.js
 
 class GuiAnimator {
   /**
@@ -41,6 +42,101 @@ class GuiAnimator {
     return TransformValue.match(/^matrix\((.+)\)$/)[1].split(',').map(parseFloat)
   }
 }
+
+
+/**
+ * 棋盘控制相关
+ */
+class GameBoardController {
+  /**
+   * 监听标准化点击位置
+   * @param {HTMLDivElement} gameBoard
+   */
+  static SetClickPositionEvent (gameBoard) {
+    gameBoard.addEventListener('click', GameBoardController.clickEvent(gameBoard))
+  }
+
+  /**
+   * @param {HTMLDivElement} gameBoard
+   */
+  static clickEvent(gameBoard) {
+    return function (event) {
+      const click = new Vector2(event.clientX, event.clientY)
+
+      const divRect = gameBoard.getBoundingClientRect()
+
+      const relative = Vector2.Sub(click, new Vector2(divRect.left, divRect.top))
+
+      let toNormal = Vector2.Mul(Vector2.Div(relative, divRect.width), 3)
+      toNormal = new Vector2(Math.floor(toNormal.x), Math.floor(toNormal.y))
+
+      GameBoardController.SetChessWith(toNormal, gameBoard)
+    }
+  }
+
+  /**
+   * 在目标点创建棋子
+   * @param {Vector2} position
+   * @param {HTMLDivElement} gameBoard
+   */
+  static SetChessWith(position, gameBoard) {
+    if (DataBase.isGameEnd) return
+
+    const chessPlace = gameBoard.getElementsByClassName('chessPlaceholder')
+
+    // 判断是否可以创建
+    if (DataBase.PlaceIsEmpty(position)) {
+      const div = this.CreateChessDiv()
+
+      // 渲染到GUI
+      chessPlace[position.x + position.y * 3].appendChild(div)
+      setTimeout(() => {
+        GuiAnimator.ShowElement(div)
+      }, 20)
+
+      // 数据库操作
+      DataBase.SetChess(position)
+
+      // 添加后检查是否胜利
+      if (DataBase.currIsWin()) {
+        // 胜利
+        DataBase.isGameEnd = true
+      }
+
+      DataBase.SwitchRounds() // 结束回合并切换
+
+      if (!DataBase.GameBoardHasEmpty()) {
+        // 平局
+        DataBase.isGameEnd = true
+      }
+    }
+  }
+
+  /**
+   * 渲染棋子
+   * @return {HTMLDivElement}
+   */
+  static CreateChessDiv() {
+    const div = document.createElement('div')
+    if (DataBase.currentOrder - 1) {
+      div.innerHTML   = `${Unicode.chess_nought}`
+      div.style.color = getComputedStyle(document.documentElement).getPropertyValue('--main_color_2')
+    } else {
+      div.innerHTML   = `${Unicode.chess_cross}`
+      div.style.color = getComputedStyle(document.documentElement).getPropertyValue('--main_color_1')
+    }
+    div.style.fontSize   = getComputedStyle(document.documentElement).getPropertyValue('--chess_size')
+    div.style.transition = '.4s ease-in-out'
+    div.style.opacity    = '0'
+    div.style.filter     = 'blur(20px)'
+    div.style.transform  = 'scale(.8)'
+    div.style.width      = '126px'
+    div.style.textAlign  = 'center'
+
+    return div
+  }
+}
+
 
 /**
  * 创建棋盘线
