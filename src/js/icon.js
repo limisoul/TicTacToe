@@ -1,3 +1,4 @@
+// 使用MesloLGS NF Regular.ttf字体文件做图标
 const Unicode = {
   logo:         `&#x0F003B`,
 
@@ -20,4 +21,6 @@ const Unicode = {
   // 棋子
   chess_cross:  `&#xEAB8`,
   chess_nought: `&#xF22D`,
+
+  coin:         `&#xFD2E`
 }
