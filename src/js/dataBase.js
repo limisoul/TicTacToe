@@ -2,17 +2,26 @@
 // 依赖项：Vector2.js, unionFind.js
 
 class DataBase {
-  static isAudioPlay = true
+  // 是否允许点击
+  static isAllowClick = true
+
+  // 是否允许播放声音
+  static isAudioPlay  = true
+
   // 0表示没有AI，1为AI先手，2为AI后手
-  static AIOrder = 0
+  static AIOrder      = 0
+
   // 棋盘 Number[3][3]
-  static gameBoard = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
+  static gameBoard    = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
 
   // 当前回合，1为先手方，2为后手方
   static currentOrder = 1
 
   // 本局结束
-  static isGameEnd = false
+  static isGameEnd    = false
+
+  // 比分
+  static score        = [0, 0]
 
   /**
    * 检查棋盘目标格是否为空

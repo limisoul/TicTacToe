@@ -20,7 +20,7 @@
       background:       linear-gradient(-70deg, #ffcc00 50%, #6699ff 50%);
       display:          flex;
       align-items:      center;
-      justify-content:  space-around;
+      justify-content:  space-between;
       border-radius:    10px;
       font-size:        var(--chess_size);
       transition:       .4s ease-in-out, top .8s ease-in-out;
@@ -28,10 +28,12 @@
 
     #cross {
       color:            var(--main_color_1);
+      display:          flex;
     }
 
     #nought {
       color:            var(--main_color_2);
+      display:          flex;
     }
 
     #gameBoard {
@@ -65,12 +67,25 @@
     }
 
     #return {
-
     }
 
     #reset {
       font-size:        calc(var(--chess_size) - 15px); /* 保证视觉大小一致 */
       transform:        rotate(0) scale(1);
+    }
+
+    #resetScore {
+      position:         absolute;
+      bottom:           0;
+      left:             50%;
+      transform:        translate(-50%);
+      display:          flex;
+      align-items:      center;
+      justify-content:  center;
+    }
+
+    #resetScore:hover {
+      transform:        translate(-50%) scale(1.2);
     }
 
     #audio {
@@ -111,13 +126,35 @@
     .chessPlaceholder:hover {
       transform:        scale(1.2);
     }
+
+    .icon {
+      padding:           0 18px;
+      transition:       .4s;
+    }
+
+    .score {
+      position:         relative;
+      bottom:           0;
+      display:          flex;
+      flex-direction:   row-reverse;
+      justify-content:  flex-end;
+      align-items:      flex-end;
+      transition:       .4s ease-in-out;
+    }
   </style>
 </head>
 <body>
   <!--记分板-->
   <div id="scoreboard">
-    <div id="cross"></div>
-    <div id="nought"></div>
+    <div id="cross">
+      <div class="icon"></div>
+      <div class="score"></div>
+    </div>
+    <div id="nought">
+      <div class="score"></div>
+      <div class="icon"></div>
+    </div>
+    <div id="resetScore" class="button" onmousedown="Reset.ResetScore()">重置分数</div>
   </div>
 
   <!--游戏板-->
@@ -151,8 +188,8 @@
   const isContinue = URL_PARAMS.get('isContinue') === 'true'
 
   // 展示分数
-  document.querySelector('#cross').innerHTML  = `${Unicode.chess_cross} 7`
-  document.querySelector('#nought').innerHTML = `2 ${Unicode.chess_nought}`
+  ScoreBoardController.LoadScore(document.querySelector('#scoreboard'))
+  ScoreBoardController.ToggleIconHighLight()
 
   // 渲染游戏窗口
   setTimeout(() => {
@@ -198,6 +235,22 @@
     static Reset() {
       this.rotate += 180
       this.ResetIcon.style.transform = `rotate(${this.rotate}deg) scale(1.2)`
+
+      // 重置数据库
+      DataBase.isGameEnd    = false
+      DataBase.currentOrder = 1
+      DataBase.gameBoard    = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
+
+      // 重置GUI
+      const GameBoard = document.querySelector('#gameBoard')
+      GameBoard.innerHTML = ''
+      for(let i = 0; i < 9; i++) {
+        let chess = document.createElement('div')
+        chess.setAttribute('class', 'chessPlaceholder')
+        GameBoard.appendChild(chess)
+      }
+      CreateGameBoardLine(GameBoard)
+      ScoreBoardController.ToggleIconHighLight()
     }
 
     /**
@@ -208,6 +261,27 @@
     }
     static Recover() {
       this.ResetIcon.style.transform = `rotate(${this.rotate}deg) scale(1)`
+    }
+
+    static ResetScore() {
+      DataBase.score = [0, 0]
+      DataBase.isAllowClick = false // 暂时对游戏进行锁定
+
+      const SCORE = document.getElementsByClassName('score')
+      function HiddenNum(index) {
+        for (let item of SCORE[index].children) {
+          GuiAnimator.HiddenElement(item)
+        }
+      }
+      HiddenNum(0)
+      HiddenNum(1)
+
+      setTimeout(() => {
+        SCORE[0].innerHTML = ''
+        SCORE[1].innerHTML = ''
+
+        DataBase.isAllowClick = true // 动画播放完毕后解锁
+      }, 400)
     }
   }
 

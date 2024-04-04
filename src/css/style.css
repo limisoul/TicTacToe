@@ -46,3 +46,10 @@ body {
 .button:hover {
   transform:          scale(1.2);
 }
+
+.hidden {
+  filter:             blur(20px);
+  opacity:            0;
+  transform:          scale(.8);
+  transition:         .4s ease-in-out;
+}
