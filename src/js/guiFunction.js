@@ -101,7 +101,9 @@ class GameBoardController {
 
       // 添加后检查是否胜利
       if (DataBase.currIsWin()) {
-        // 胜利
+        /****************** 胜利 ******************/
+        SettlementController.ShowEndDiv(DataBase.currentOrder)
+
         DataBase.isGameEnd = true
         DataBase.score[DataBase.currentOrder - 1] += 1
 
@@ -113,7 +115,9 @@ class GameBoardController {
       ScoreBoardController.ToggleIconHighLight()
 
       if (!DataBase.GameBoardHasEmpty()) {
-        // 平局
+        /****************** 平局 ******************/
+        SettlementController.ShowEndDiv(0)
+
         DataBase.isGameEnd = true
       }
     }
@@ -235,6 +239,68 @@ class ScoreBoardController {
     ICON[1].style.transform = 2 === DataBase.currentOrder ? 'scale(1.2)' : 'scale(1)'
   }
 }
+
+
+/**
+ * 结算条相关
+ */
+class SettlementController {
+  static div = null
+
+  /**
+   * 设置Settlement的dom
+   * @param {HTMLDivElement} div
+   */
+  static SetSettlement(div) {
+    this.div = div
+  }
+
+  /**
+   * 显示结算条
+   * @param {Number} winner 胜利方，0平局、1先方、2后方
+   */
+  static ShowEndDiv (winner) {
+    const div = this.div
+    if (div === null) {
+      console.log('未设置结算条的Dom')
+      return
+    }
+
+    div.style.transform = 'translate(0, -50%) scale(1)'
+
+    const root = getComputedStyle(document.documentElement)
+
+    switch (winner) {
+      case 0:
+        div.style.color = root.getPropertyValue('--button_color')
+        div.innerHTML = '平局'
+        break
+      case 1:
+        div.style.color = root.getPropertyValue('--main_color_1')
+        div.innerHTML = '红方胜利'
+        break
+      case 2:
+        div.style.color = root.getPropertyValue('--main_color_2')
+        div.innerHTML = '蓝方胜利'
+        break
+    }
+  }
+
+  /**
+   * 隐藏结算条
+   */
+  static HiddenEndDiv () {
+    const div = this.div
+    if (div === null) {
+      console.log('未设置结算条的Dom')
+      return
+    }
+
+    div.style.transform = 'translate(0, -50%) scale(1, .001)'
+    div.innerHTML = ''
+  }
+}
+
 
 
 /**

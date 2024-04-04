@@ -100,6 +100,25 @@
       font-size:        var(--title_size);
     }
 
+    #settlement {
+      position:         fixed;
+      top:              50%;
+      transform:        translate(0, -50%) scale(1, .001);
+      width:            100vw;
+      height:           250px;
+      background:       #88888820;
+      backdrop-filter:  blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display:          flex;
+      justify-content:  center;
+      align-items:      center;
+      font-size:        var(--chess_size);
+      color:            var(--button_color);
+      z-index:          100;
+      overflow:         hidden;
+      transition:       .4s ease-in-out;
+    }
+
     .consoleButton {
       height:           auto;
       background:       none;
@@ -178,6 +197,9 @@
     <div id="audio"  class="consoleButton button" onmousedown="ToggleAudio()"></div>
     <div id="mode"></div>
   </div>
+
+  <!--结算条-->
+  <div id="settlement"></div>
 </body>
 <script src="js/time.js"></script>
 <script src="js/clickFX.js"></script>
@@ -197,6 +219,7 @@
     document.querySelector('#console').style.bottom = '20px'
   }, 20)
   CreateGameBoardLine(document.querySelector('#gameBoard'))
+  SettlementController.SetSettlement(document.querySelector('#settlement'))
 
   // 控制台
   document.querySelector('#return').innerHTML = `${Unicode.arrow_left}`
@@ -233,6 +256,7 @@
      * 重置棋盘
      */
     static Reset() {
+      // 旋转动画
       this.rotate += 180
       this.ResetIcon.style.transform = `rotate(${this.rotate}deg) scale(1.2)`
 
@@ -251,6 +275,8 @@
       }
       CreateGameBoardLine(GameBoard)
       ScoreBoardController.ToggleIconHighLight()
+
+      SettlementController.HiddenEndDiv()
     }
 
     /**
