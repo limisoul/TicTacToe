@@ -137,7 +137,7 @@
 
   // 判断用户是否还在操作
   let userSilentTime = 0    // 用户操作计时器
-  const SILENT_LIMIT = 800  // 未操作时间限制
+  const SILENT_LIMIT = 2000  // 未操作时间限制
   window.addEventListener('mousemove', function () {
     userSilentTime = 0
     Mask.Close()
