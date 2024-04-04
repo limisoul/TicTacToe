@@ -108,6 +108,7 @@ class GameBoardController {
         DataBase.score[DataBase.currentOrder - 1] += 1
 
         ScoreBoardController.LoadScore()
+        return
       }
 
       // 结束回合并切换
