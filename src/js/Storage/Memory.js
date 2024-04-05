@@ -31,8 +31,9 @@ class Memory {
    * 读取数据
    */
   static MemLoad () {
+    if (!this.isSaved) return
+
     let buffer = localStorage.getItem('mem')
-    if (!buffer) return
 
     // 解密
     buffer = this.DecryptString(buffer)
@@ -48,6 +49,21 @@ class Memory {
     // 读取棋盘
     const boardArray = buffer.slice(6).split('')
     DataBase.gameBoard = Array.from({ length: 3 }, () => boardArray.splice(0, 3).map(Number))
+  }
+
+  /**
+   * 是否有存储
+   * @return {boolean}
+   */
+  static get isSaved () {
+    return Boolean(localStorage.getItem('mem'))
+  }
+
+  /**
+   * 清除存储
+   */
+  static Destroy () {
+    localStorage.removeItem('mem')
   }
 
   /******************* 简单映射加密 *******************/

@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="js/Icon/Icon.js"></script>
   <script src="js/ToolBox/Vector2.js"></script>
+  <script src="js/Storage/Memory.js"></script>
   <script src="js/GUIFunction/GuiAnimator.js"></script>
   <style>
     #app {
@@ -51,6 +52,9 @@
     <div class="choose">
       <button class="button" onmousedown="GotoGameBoard(true,  false)">人机对弈</button>
     </div>
+    <div class="choose" style="display: none">
+      <button class="button" onmousedown="GotoGameBoard(true,  true)">继续游戏</button>
+    </div>
   </div>
 </body>
 <script src="js/ToolBox/Time.js"></script>
@@ -64,6 +68,11 @@
   setTimeout(() => {
     GuiAnimator.ShowElement(APP)
   }, 20)
+
+  // 判断是否可以继续游戏
+  if (Memory.isSaved) {
+    APP.children[3].style.display = 'block'
+  }
 
   /**
    * 跳转到游戏页面

@@ -321,6 +321,10 @@
 
     SettlementController.HiddenEndDiv()
 
+    if (DataBase.isGameEnd) {
+      Memory.Destroy()
+    }
+
     setTimeout(() => {
       window.location.href = 'modeSelection.html'
     }, 400)
