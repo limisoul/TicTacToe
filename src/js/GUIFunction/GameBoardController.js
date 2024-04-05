@@ -82,9 +82,8 @@ class GameBoardController {
           DataBase.isGameEnd = true
         }
       }
-
-      DataBase.isAllowClick = true
     }
+    DataBase.isAllowClick = true
   }
 
   /**
