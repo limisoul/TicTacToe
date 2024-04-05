@@ -32,13 +32,13 @@ body {
 }
 
 #mask {
-  position: fixed;
-  width: 100vh;
-  height: 100vw;
-  top: 0;
-  left: 0;
-  z-index: 1024;
-  background: #00000000;
+  position:           fixed;
+  width:              100vw;
+  height:             100vh;
+  top:                0;
+  left:               0;
+  z-index:            1024;
+  background:         #00000000;
 }
 
 .button {
