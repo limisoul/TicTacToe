@@ -11,6 +11,7 @@
   <script src="js/dataBase.js"></script>
   <script src="js/guiFunction.js"></script>
   <script src="js/coin.js"></script>
+  <script src="js/AIEngine.js"></script>
   <style>
     #scoreboard {
       position:         fixed;
@@ -224,7 +225,7 @@
   CreateGameBoardLine(document.querySelector('#gameBoard'))
   SettlementController.SetSettlement(document.querySelector('#settlement'))
 
-  // 控制台
+  // 控制台UI
   document.querySelector('#return').innerHTML = `${Unicode.arrow_left}`
   document.querySelector('#reset').innerHTML  = `${Unicode.reset}`
   document.querySelector('#audio').innerHTML  = `${Unicode.audio_play}`
@@ -235,6 +236,55 @@
   GameBoardController.SetClickPositionEvent(document.querySelector('#gameBoard'))
 
 
+  /******************  AI相关  ******************/
+  let isAllowAIMonitor = false
+  let coin
+  if (isAIMode) {
+    coin = new CoinController()
+    DataBase.AIOrder = coin.choose
+
+    const AIEvent = function () {
+      if (isAllowAIMonitor) {
+        if (DataBase.AIOrder === DataBase.currentOrder) {
+          DataBase.isAllowClick = false
+
+          // ai
+          let times = Math.floor(Math.random() * 4)
+
+          let currentBoard = rotateLeft(DataBase.gameBoard, times)
+          let boardWithBestMove = bestMove(currentBoard, DataBase.AIOrder)
+          if (boardWithBestMove) {
+            boardWithBestMove = rotateLeft(boardWithBestMove, 4 - times)
+
+            const position = DataBase.CompareDifferences(boardWithBestMove)
+            if (position) {
+              GameBoardController.SetChessWith(position, document.querySelector('#gameBoard'))
+            }
+          }
+
+          DataBase.isAllowClick = true
+        }
+      }
+      requestAnimationFrame(AIEvent)
+    }
+    AIEvent()
+
+    // 检查允许监听相关
+    const CoinEnd = function () {
+      if (coin.animationEnd) {
+        if (DataBase.isGameEnd) {
+          isAllowAIMonitor = false
+        } else {
+          isAllowAIMonitor = true
+        }
+      }
+      requestAnimationFrame(CoinEnd)
+    }
+    CoinEnd()
+  }
+
+
+  /****************** 按键相关 ******************/
   /**
    * 返回选单
    */
@@ -280,6 +330,12 @@
       ScoreBoardController.ToggleIconHighLight()
 
       SettlementController.HiddenEndDiv()
+
+      if (isAIMode) {
+        isAllowAIMonitor = false
+        coin = new CoinController()
+        DataBase.AIOrder = coin.choose
+      }
     }
 
     /**

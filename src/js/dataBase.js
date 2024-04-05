@@ -61,12 +61,12 @@ class DataBase {
   }
 
   /**
-   * 检查当前方是否胜利
+   * 检查某一方是否胜利
+   * @param {Number} curr 默认为当前方
+   * @param {Number[][]} board 默认为棋盘
    * @return {boolean}
    */
-  static currIsWin() {
-    const board = this.gameBoard
-    const curr  = this.currentOrder
+  static currIsWin(board = this.gameBoard, curr = this.currentOrder) {
     const uf    = new UnionFind(9)
 
     for (let i = 0; i < board.length; i++) {
@@ -111,5 +111,22 @@ class DataBase {
     }
 
     return false
+  }
+
+  /**
+   * 查找棋盘与当前棋盘的差异（AI用）
+   * @param {number[][]} calcBoard
+   * @return {Vector2}
+   */
+  static CompareDifferences(calcBoard) {
+    const board = this.gameBoard
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (calcBoard[i][j] !== board[i][j]) {
+          return new Vector2(j, i)
+        }
+      }
+    }
+    return null
   }
 }
