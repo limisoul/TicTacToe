@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=.6">
   <title>井字棋</title>
   <link rel="stylesheet" href="css/style.css">
-  <script src="js/icon.js"></script>
-  <script src="js/vector2.js"></script>
-  <script src="js/unionFind.js"></script>
-  <script src="js/dataBase.js"></script>
-  <script src="js/guiFunction.js"></script>
-  <script src="js/coin.js"></script>
+  <script src="js/Icon/Icon.js"></script>
+  <script src="js/ToolBox/Vector2.js"></script>
+  <script src="js/ToolBox/UnionFind.js"></script>
+  <script src="js/Storage/DataBase.js"></script>
+  <script src="js/GUIFunction/GuiAnimator.js"></script>
+  <script src="js/GUIFunction/GameBoardController.js"></script>
+  <script src="js/GUIFunction/ScoreBoardController.js"></script>
+  <script src="js/GUIFunction/SettlementController.js"></script>
+  <script src="js/GUIFunction/CoinController.js"></script>
   <script src="js/AIEngine.js"></script>
   <style>
     #scoreboard {
@@ -205,8 +208,8 @@
   <!--结算条-->
   <div id="settlement"></div>
 </body>
-<script src="js/time.js"></script>
-<script src="js/clickFX.js"></script>
+<script src="js/ToolBox/Time.js"></script>
+<script src="js/FX/ClickFX.js"></script>
 <script>
   // 获取游戏模式
   const URL_PARAMS = new URLSearchParams(window.location.search)
@@ -222,7 +225,7 @@
     document.querySelector('#scoreboard').style.top = '20px'
     document.querySelector('#console').style.bottom = '20px'
   }, 20)
-  CreateGameBoardLine(document.querySelector('#gameBoard'))
+  GameBoardController.CreateGameBoardLine(document.querySelector('#gameBoard'))
   SettlementController.SetSettlement(document.querySelector('#settlement'))
 
   // 控制台UI
@@ -322,7 +325,7 @@
         chess.setAttribute('class', 'chessPlaceholder')
         GameBoard.appendChild(chess)
       }
-      CreateGameBoardLine(GameBoard)
+      GameBoardController.CreateGameBoardLine(GameBoard)
       ScoreBoardController.ToggleIconHighLight()
 
       SettlementController.HiddenEndDiv()

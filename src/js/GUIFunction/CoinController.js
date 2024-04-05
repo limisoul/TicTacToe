@@ -1,5 +1,5 @@
 // noinspection JSUnusedGlobalSymbols
-// 依赖项：icon.js, style.css, vector2.js, guiFunction.js
+// 依赖项：Icon.js, style.css, Vector2.js, guiFunction.js
 
 class CoinController {
   constructor() {

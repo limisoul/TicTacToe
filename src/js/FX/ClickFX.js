@@ -1,5 +1,5 @@
 // noinspection JSUnusedGlobalSymbols
-// 本文件依赖项：time.js, vector2.js
+// 本文件依赖项：Time.js, Vector2.js
 
 const ParticleNum       = 15 // 粒子数量
 const JitterSize        = 5 // 粒子抖动大小（最大尺寸）

@@ -1,5 +1,4 @@
 // noinspection JSUnusedGlobalSymbols
-// 依赖项：Vector2.js, unionFind.js
 
 class DataBase {
   // 是否允许点击
