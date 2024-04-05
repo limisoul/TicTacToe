@@ -66,9 +66,10 @@ class GameBoardController {
         /****************** 胜利 ******************/
         SettlementController.ShowEndDiv(DataBase.currentOrder)
 
-        DataBase.isGameEnd = true
+        DataBase.isGameEnd    = true
         DataBase.score[DataBase.currentOrder - 1] = (DataBase.score[DataBase.currentOrder - 1] + 1) % 100
-        DataBase.gameBoard = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
+        DataBase.currentOrder = 1
+        DataBase.gameBoard    = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
 
         ScoreBoardController.LoadScore()
       } else {
@@ -80,8 +81,9 @@ class GameBoardController {
           /****************** 平局 ******************/
           SettlementController.ShowEndDiv(0)
 
-          DataBase.isGameEnd = true
-          DataBase.gameBoard = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
+          DataBase.isGameEnd    = true
+          DataBase.currentOrder = 1
+          DataBase.gameBoard    = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
         }
       }
       /****************** 写内存 ******************/
