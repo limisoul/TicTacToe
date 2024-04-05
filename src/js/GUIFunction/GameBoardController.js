@@ -67,7 +67,7 @@ class GameBoardController {
         SettlementController.ShowEndDiv(DataBase.currentOrder)
 
         DataBase.isGameEnd = true
-        DataBase.score[DataBase.currentOrder - 1] += 1
+        DataBase.score[DataBase.currentOrder - 1] = (DataBase.score[DataBase.currentOrder - 1] + 1) % 100
 
         ScoreBoardController.LoadScore()
       } else {
