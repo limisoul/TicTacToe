@@ -3,6 +3,7 @@
 
 class CoinController {
   constructor() {
+    DataBase.isAllowClick = false
     const div = document.createElement('div')
     div.setAttribute('class', 'coin')
     div.style.transition = '.4s ease-in-out'
@@ -12,11 +13,11 @@ class CoinController {
         transform: translate(-50%, -50%) rotateY(180deg);">${Unicode.coin}</div>
     `
 
-    this.div = div
-    this.rotateSpeed    = Vector2.Mul(Vector2.one, 32)
+    this.div    = div
     this.choose = Math.random() > .5 ? 2 : 1 // 选择的先后手
+    this.rotateSpeed    = Vector2.Mul(Vector2.one, 32)
     this.rotatePosition = (this.choose - 1) ? new Vector2(0, 180) : new Vector2(180, 0)
-    this.animationEnd = false
+    this.animationEnd   = false
 
     document.body.appendChild(div)
 
@@ -35,7 +36,8 @@ class CoinController {
     if (this.rotateSpeed.x === 0) {
       setTimeout(() => {
         GuiAnimator.HiddenElement(this.div)
-        this.animationEnd = true
+        this.animationEnd     = true
+        DataBase.isAllowClick = true
       }, 400)
     }
   }
