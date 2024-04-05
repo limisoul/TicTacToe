@@ -3,6 +3,8 @@
 
 class CoinController {
   constructor() {
+    this.CreateMask()
+
     DataBase.isAllowClick = false
     const div = document.createElement('div')
     div.setAttribute('class', 'coin')
@@ -21,12 +23,14 @@ class CoinController {
 
     document.body.appendChild(div)
 
-    setInterval(() => {
+    this.event = setInterval(() => {
       this.FixedUpdate()
     }, Time.fixedTime)
   }
 
   FixedUpdate() {
+    if (this.animationEnd) return
+
     this.rotatePosition = Vector2.Add(this.rotatePosition, this.rotateSpeed)
     this.rotateSpeed    = Vector2.Lerp(this.rotateSpeed, Vector2.zero, Time.fixedTime * 16)
 
@@ -38,7 +42,40 @@ class CoinController {
         GuiAnimator.HiddenElement(this.div)
         this.animationEnd     = true
         DataBase.isAllowClick = true
+
+        this.Destroy()
       }, 400)
+    }
+  }
+
+  /**
+   * 创建遮罩层，禁止点击
+   */
+  CreateMask() {
+    const mask = document.createElement('div')
+    mask.setAttribute('id', 'mask')
+
+    this.mask = mask
+
+    document.body.appendChild(mask)
+  }
+
+  /**
+   * 删除硬币和遮罩层的UI
+   */
+  Destroy() {
+    if (this.div) {
+      this.div.remove()
+      this.div = null
+    }
+
+    if (this.mask) {
+      this.mask.remove()
+      this.mask = null
+    }
+
+    if (this.event) {
+      clearInterval(this.event)
     }
   }
 }

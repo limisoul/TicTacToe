@@ -31,6 +31,16 @@ body {
   user-select:        none; /* Non-prefixed version, currently supported by Chrome, Opera, and Firefox */
 }
 
+#mask {
+  position: fixed;
+  width: 100vh;
+  height: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1024;
+  background: #00000000;
+}
+
 .button {
   border-radius:      10px;
   height:             40px;
