@@ -66,10 +66,10 @@ class GameBoardController {
         /****************** 胜利 ******************/
         SettlementController.ShowEndDiv(DataBase.currentOrder)
 
-        DataBase.isGameEnd    = true
+        // 记一分
         DataBase.score[DataBase.currentOrder - 1] = (DataBase.score[DataBase.currentOrder - 1] + 1) % 100
-        DataBase.currentOrder = 1
-        DataBase.gameBoard    = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
+
+        this.GameEnd()
 
         ScoreBoardController.LoadScore()
       } else {
@@ -81,9 +81,7 @@ class GameBoardController {
           /****************** 平局 ******************/
           SettlementController.ShowEndDiv(0)
 
-          DataBase.isGameEnd    = true
-          DataBase.currentOrder = 1
-          DataBase.gameBoard    = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
+          this.GameEnd()
         }
       }
       /****************** 写内存 ******************/
@@ -180,5 +178,15 @@ class GameBoardController {
         }, 20)
       }
     }
+  }
+
+  /**
+   * 游戏结束逻辑
+   */
+  static GameEnd() {
+    // 初始化数据库
+    DataBase.isGameEnd    = true
+    DataBase.currentOrder = 1
+    DataBase.gameBoard    = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
   }
 }
