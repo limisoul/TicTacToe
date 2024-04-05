@@ -9,6 +9,7 @@
   <script src="js/ToolBox/Vector2.js"></script>
   <script src="js/ToolBox/UnionFind.js"></script>
   <script src="js/Storage/DataBase.js"></script>
+  <script src="js/Storage/Memory.js"></script>
   <script src="js/GUIFunction/GuiAnimator.js"></script>
   <script src="js/GUIFunction/GameBoardController.js"></script>
   <script src="js/GUIFunction/ScoreBoardController.js"></script>
@@ -216,6 +217,18 @@
   const isAIMode   = URL_PARAMS.get('isAIMode')   === 'true'
   const isContinue = URL_PARAMS.get('isContinue') === 'true'
 
+
+  /******************  重启相关  ******************/
+  if (isContinue) {
+    Memory.MemLoad()
+    GameBoardController.InitBoard(document.querySelector('#gameBoard'))
+  } else {
+    // 自动转换为从存储中加载
+    const newURL = `${window.location.protocol}//${window.location.host}${window.location.pathname}?isAIMode=${isAIMode}&isContinue=true`
+    window.history.pushState({path:newURL},'',newURL)
+  }
+
+
   // 展示分数
   ScoreBoardController.LoadScore(document.querySelector('#scoreboard'))
   ScoreBoardController.ToggleIconHighLight()
@@ -243,8 +256,10 @@
   let isAllowAIMonitor = false
   let coin
   if (isAIMode) {
-    coin = new CoinController()
-    DataBase.AIOrder = coin.choose
+    if (!isContinue) {
+      coin = new CoinController()
+      DataBase.AIOrder = coin.choose
+    }
 
     const AIEvent = function () {
       if (isAllowAIMonitor) {
@@ -274,9 +289,14 @@
 
     // 检查允许监听相关
     const CoinEnd = function () {
-      if (coin.animationEnd) {
-        isAllowAIMonitor = !DataBase.isGameEnd;
+      if (coin) {
+        if (coin.animationEnd) {
+          isAllowAIMonitor = !DataBase.isGameEnd;
+        }
+      } else {
+        isAllowAIMonitor = true // 从存储中加载时没有初始化coin
       }
+
       requestAnimationFrame(CoinEnd)
     }
     CoinEnd()
@@ -310,6 +330,8 @@
      * 重置棋盘
      */
     static Reset() {
+      DataBase.isAllowClick = false
+
       // 旋转动画
       this.rotate += 180
       this.ResetIcon.style.transform = `rotate(${this.rotate}deg) scale(1.2)`
@@ -319,24 +341,38 @@
       DataBase.currentOrder = 1
       DataBase.gameBoard    = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
 
-      // 重置GUI
-      const GameBoard = document.querySelector('#gameBoard')
-      GameBoard.innerHTML = ''
-      for(let i = 0; i < 9; i++) {
-        let chess = document.createElement('div')
-        chess.setAttribute('class', 'chessPlaceholder')
-        GameBoard.appendChild(chess)
-      }
-      GameBoardController.CreateGameBoardLine(GameBoard)
-      ScoreBoardController.ToggleIconHighLight()
-
-      SettlementController.HiddenEndDiv()
-
       if (isAIMode) {
         isAllowAIMonitor = false
         coin = new CoinController()
         DataBase.AIOrder = coin.choose
       }
+
+      Memory.MemSet()
+
+      // 重置GUI
+      const GameBoard = document.querySelector('#gameBoard')
+      for(let i = 0; i < 9; i++) {
+        if (GameBoard.children[i].children[0]) {
+          GuiAnimator.HiddenElement(GameBoard.children[i].children[0])
+        }
+      }
+      for (let j = 0; j < 4; j++) {
+        GuiAnimator.HiddenElement(GameBoard.children[j + 9])
+      }
+      setTimeout(() => {
+        GameBoard.innerHTML = ''
+        for(let i = 0; i < 9; i++) {
+          let chess = document.createElement('div')
+          chess.setAttribute('class', 'chessPlaceholder')
+          GameBoard.appendChild(chess)
+        }
+        GameBoardController.CreateGameBoardLine(GameBoard)
+        ScoreBoardController.ToggleIconHighLight()
+
+        DataBase.isAllowClick = true
+      }, 400)
+
+      SettlementController.HiddenEndDiv()
     }
 
     /**
@@ -351,6 +387,8 @@
 
     static ResetScore() {
       DataBase.score = [0, 0]
+      Memory.MemSet()
+
       DataBase.isAllowClick = false // 暂时对游戏进行锁定
 
       const SCORE = document.getElementsByClassName('score')

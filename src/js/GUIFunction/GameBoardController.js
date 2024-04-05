@@ -68,6 +68,7 @@ class GameBoardController {
 
         DataBase.isGameEnd = true
         DataBase.score[DataBase.currentOrder - 1] = (DataBase.score[DataBase.currentOrder - 1] + 1) % 100
+        DataBase.gameBoard = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
 
         ScoreBoardController.LoadScore()
       } else {
@@ -80,19 +81,23 @@ class GameBoardController {
           SettlementController.ShowEndDiv(0)
 
           DataBase.isGameEnd = true
+          DataBase.gameBoard = Array(3).fill(undefined, undefined, undefined).map(() => Array(3).fill(0))
         }
       }
+      /****************** 写内存 ******************/
+      Memory.MemSet()
     }
     DataBase.isAllowClick = true
   }
 
   /**
    * 渲染棋子
+   * @param {number} curr
    * @return {HTMLDivElement}
    */
-  static CreateChessDiv() {
+  static CreateChessDiv(curr = DataBase.currentOrder - 1) {
     const div = document.createElement('div')
-    if (DataBase.currentOrder - 1) {
+    if (curr) {
       div.innerHTML   = `${Unicode.chess_nought}`
       div.style.color = getComputedStyle(document.documentElement).getPropertyValue('--main_color_2')
     } else {
@@ -151,5 +156,27 @@ class GameBoardController {
     SetTransform(Line[1], [0, 298], true)
     SetTransform(Line[2], [146, 0], false)
     SetTransform(Line[3], [298, 0], false)
+  }
+
+  /**
+   * 从存储中加载
+   * @param {HTMLDivElement} gameBoard
+   */
+  static InitBoard(gameBoard) {
+    const chessPlace = gameBoard.getElementsByClassName('chessPlaceholder')
+
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (DataBase.PlaceIsEmpty(new Vector2(j, i))) {
+          continue
+        }
+        let div = this.CreateChessDiv(DataBase.gameBoard[i][j] - 1)
+
+        chessPlace[i * 3 + j].appendChild(div)
+        setTimeout(() => {
+          GuiAnimator.ShowElement(div)
+        }, 20)
+      }
+    }
   }
 }
