@@ -11,20 +11,23 @@ class CoinController {
       <div class="coinFace" style="color: var(--main_color_2);
         transform: translate(-50%, -50%) rotateY(180deg);">${Unicode.coin}</div>
     `
-
+``
     this.div = div
-    this.rotatePosition = Math.random() > .5 ? new Vector2(0, 180) : new Vector2(180, 0)
-    this.rotateSpeed    = Vector2.Mul(Vector2.one, 20)
+    this.rotateSpeed    = Vector2.Mul(Vector2.one, 32)
+    this.choose = Math.random() > .5 ? 2 : 1 // 选择的先后手
+    this.rotatePosition = (this.choose - 1) ? new Vector2(0, 180) : new Vector2(180, 0)
+    console.log(this.choose)
 
     document.body.appendChild(div)
 
-    this.Update = this.Update.bind(this)
-    this.Update()
+    setInterval(() => {
+      this.FixedUpdate()
+    }, Time.fixedTime)
   }
 
-  Update() {
+  FixedUpdate() {
     this.rotatePosition = Vector2.Add(this.rotatePosition, this.rotateSpeed)
-    this.rotateSpeed    = Vector2.Lerp(this.rotateSpeed, Vector2.zero, Time.deltaTime * 10)
+    this.rotateSpeed    = Vector2.Lerp(this.rotateSpeed, Vector2.zero, Time.fixedTime * 16)
 
     this.div.children[0].style.transform = `translate(-50%, -50%) rotateY(${this.rotatePosition.x}deg)`
     this.div.children[1].style.transform = `translate(-50%, -50%) rotateY(${this.rotatePosition.y}deg)`
@@ -34,7 +37,5 @@ class CoinController {
         GuiAnimator.HiddenElement(this.div)
       }, 400)
     }
-
-    requestAnimationFrame(this.Update)
   }
 }
