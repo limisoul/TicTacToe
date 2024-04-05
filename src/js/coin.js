@@ -43,7 +43,9 @@ class CoinController {
         this.animationEnd     = true
         DataBase.isAllowClick = true
 
-        this.Destroy()
+        setTimeout(() => {
+          this.Destroy()
+        }, 400)
       }, 400)
     }
   }
