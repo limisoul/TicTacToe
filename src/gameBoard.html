@@ -215,19 +215,24 @@
 <script>
   // 获取游戏模式
   const URL_PARAMS = new URLSearchParams(window.location.search)
-  const isAIMode   = URL_PARAMS.get('isAIMode')   === 'true'
+  let   isAIMode   = URL_PARAMS.get('isAIMode')   === 'true'
   const isContinue = URL_PARAMS.get('isContinue') === 'true'
 
 
   /******************  重启相关  ******************/
   if (isContinue) {
     Memory.MemLoad()
+
+    isAIMode = Boolean(DataBase.AIOrder)
+
     GameBoardController.InitBoard(document.querySelector('#gameBoard'))
   } else {
-    // 自动转换为从存储中加载
-    const newURL = `${window.location.protocol}//${window.location.host}${window.location.pathname}?isAIMode=${isAIMode}&isContinue=true`
-    window.history.pushState({path:newURL},'',newURL)
+    DataBase.AIOrder = isAIMode ? Math.floor(Math.random() + 1.5) : 0
+    Memory.MemSet()
   }
+  // 自动转换为从存储中加载
+  const newURL = `${window.location.protocol}//${window.location.host}${window.location.pathname}?isAIMode=${isAIMode}&isContinue=true`
+  window.history.pushState({path:newURL},'',newURL)
 
 
   // 展示分数
@@ -260,6 +265,7 @@
     if (!isContinue) {
       coin = new CoinController()
       DataBase.AIOrder = coin.choose
+      Memory.MemSet()
     }
 
     const AIEvent = function () {
