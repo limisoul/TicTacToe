@@ -60,10 +60,12 @@ class GameBoardController {
    * @param {HTMLDivElement} gameBoard
    */
   static clickEvent(gameBoard) {
-    if (!DataBase.isAllowClick) return;
-    DataBase.isAllowClick = false
-
     return function (event) {
+      if (!DataBase.isAllowClick) {
+        return
+      }
+      DataBase.isAllowClick = false
+
       const click = new Vector2(event.clientX, event.clientY)
 
       const divRect = gameBoard.getBoundingClientRect()

@@ -272,11 +272,7 @@
     // 检查允许监听相关
     const CoinEnd = function () {
       if (coin.animationEnd) {
-        if (DataBase.isGameEnd) {
-          isAllowAIMonitor = false
-        } else {
-          isAllowAIMonitor = true
-        }
+        isAllowAIMonitor = !DataBase.isGameEnd;
       }
       requestAnimationFrame(CoinEnd)
     }
