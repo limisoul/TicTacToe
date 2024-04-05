@@ -213,6 +213,18 @@
 <script src="js/ToolBox/Time.js"></script>
 <script src="js/FX/ClickFX.js"></script>
 <script>
+  const GAME_BOARD  = document.querySelector('#gameBoard')
+  const SCORE_BOARD = document.querySelector('#scoreboard')
+  const CONSOLE     = document.querySelector('#console')
+  const SETTLEMENT  = document.querySelector('#settlement')
+
+  const BUTTON = {
+    RETURN: document.querySelector('#return'),
+    RESET:  document.querySelector('#reset'),
+    AUDIO:  document.querySelector('#audio'),
+    MODE:   document.querySelector('#mode')
+  }
+
   // 获取游戏模式
   const URL_PARAMS = new URLSearchParams(window.location.search)
   let   isAIMode   = URL_PARAMS.get('isAIMode')   === 'true'
@@ -225,7 +237,7 @@
 
     isAIMode = Boolean(DataBase.AIOrder)
 
-    GameBoardController.InitBoard(document.querySelector('#gameBoard'))
+    GameBoardController.InitBoard(GAME_BOARD)
   } else {
     DataBase.AIOrder = isAIMode ? Math.floor(Math.random() + 1.5) : 0
     Memory.MemSet()
@@ -236,26 +248,26 @@
 
 
   // 展示分数
-  ScoreBoardController.LoadScore(document.querySelector('#scoreboard'))
+  ScoreBoardController.LoadScore(SCORE_BOARD)
   ScoreBoardController.ToggleIconHighLight()
 
   // 渲染游戏窗口
   setTimeout(() => {
-    document.querySelector('#scoreboard').style.top = '20px'
-    document.querySelector('#console').style.bottom = '20px'
+    SCORE_BOARD.style.top = '20px'
+    CONSOLE.style.bottom  = '20px'
   }, 20)
-  GameBoardController.CreateGameBoardLine(document.querySelector('#gameBoard'))
-  SettlementController.SetSettlement(document.querySelector('#settlement'))
+  GameBoardController.CreateGameBoardLine(GAME_BOARD)
+  SettlementController.SetSettlement(SETTLEMENT)
 
   // 控制台UI
-  document.querySelector('#return').innerHTML = `${Unicode.arrow_left}`
-  document.querySelector('#reset').innerHTML  = `${Unicode.reset}`
-  document.querySelector('#audio').innerHTML  = `${Unicode.audio_play}`
-  document.querySelector('#mode').innerHTML   = isAIMode ? '人机对弈' : '玩家对弈'
+  BUTTON.RETURN.innerHTML = `${Unicode.arrow_left}`
+  BUTTON.RESET.innerHTML  = `${Unicode.reset}`
+  BUTTON.AUDIO.innerHTML  = `${Unicode.audio_play}`
+  BUTTON.MODE.innerHTML   = isAIMode ? '人机对弈' : '玩家对弈'
 
 
   // 监听点击棋盘事件
-  GameBoardController.SetClickPositionEvent(document.querySelector('#gameBoard'))
+  GameBoardController.SetClickPositionEvent(GAME_BOARD)
 
 
   /******************  AI相关  ******************/
@@ -283,7 +295,7 @@
 
             const position = DataBase.CompareDifferences(boardWithBestMove)
             if (position) {
-              GameBoardController.SetChessWith(position, document.querySelector('#gameBoard'))
+              GameBoardController.SetChessWith(position, GAME_BOARD)
             }
           }
 
@@ -310,14 +322,41 @@
   }
 
 
+  /********************* 判断用户是否还在操作 *********************/
+  let userSilentTime = 0    // 用户操作计时器
+  const SILENT_LIMIT = 2000  // 未操作时间限制
+  setTimeout(() => {
+    window.addEventListener('mousemove', function () {
+      userSilentTime = 0
+      SCORE_BOARD.style.top = '20px'
+      CONSOLE.style.bottom  = '20px'
+      GAME_BOARD.style.transform = 'translate(-50%, -50%) scale(1)'
+    })
+  }, 20)
+
+  const Update = function () {
+    userSilentTime += Time.deltaTime
+
+    // 用户长时间未点击
+    if (userSilentTime >= SILENT_LIMIT) {
+      SCORE_BOARD.style.top = '-225px'
+      CONSOLE.style.bottom  = '-136px'
+      GAME_BOARD.style.transform = 'translate(-50%, -50%) scale(1.2)'
+    }
+
+    requestAnimationFrame(Update)
+  }
+  Update()
+
+
   /****************** 按键相关 ******************/
   /**
    * 返回选单
    */
   const Return = function () {
-    GuiAnimator.HiddenElement(document.querySelector('#scoreboard'))
-    GuiAnimator.HiddenElement(document.querySelector('#gameBoard'))
-    GuiAnimator.HiddenElement(document.querySelector('#console'))
+    GuiAnimator.HiddenElement(SCORE_BOARD)
+    GuiAnimator.HiddenElement(GAME_BOARD)
+    GuiAnimator.HiddenElement(CONSOLE)
 
     SettlementController.HiddenEndDiv()
 
@@ -334,7 +373,7 @@
    * 重置按钮相关
    */
   class Reset {
-    static ResetIcon = document.querySelector('#reset')
+    static ResetIcon = BUTTON.RESET
     static rotate = 0
 
     /**
@@ -361,7 +400,7 @@
       Memory.MemSet()
 
       // 重置GUI
-      const GameBoard = document.querySelector('#gameBoard')
+      const GameBoard = GAME_BOARD
       for(let i = 0; i < 9; i++) {
         if (GameBoard.children[i].children[0]) {
           GuiAnimator.HiddenElement(GameBoard.children[i].children[0])
@@ -425,7 +464,7 @@
    */
   const ToggleAudio = function () {
     DataBase.isAudioPlay = !DataBase.isAudioPlay
-    document.querySelector('#audio').innerHTML = DataBase.isAudioPlay ? `${Unicode.audio_play}` : `${Unicode.audio_mute}`
+    BUTTON.AUDIO.innerHTML = DataBase.isAudioPlay ? `${Unicode.audio_play}` : `${Unicode.audio_mute}`
   }
 </script>
 </html>
