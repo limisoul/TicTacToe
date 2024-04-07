@@ -51,9 +51,9 @@ class AudioController {
 }
 
 const MusicFiles = {
-  background: '/src/resources/Audio/BGGuzheng.mp3',
-  book_page:  '/src/resources/Audio/BookPage.wav',
-  blacksmith: '/src/resources/Audio/Blacksmith.wav',
-  coin:       '/src/resources/Audio/Coin.wav',
-  ui_click:   '/src/resources/Audio/UIClick.wav',
+  background: 'resources/Audio/BGGuzheng.mp3',
+  book_page:  'resources/Audio/BookPage.wav',
+  blacksmith: 'resources/Audio/Blacksmith.wav',
+  coin:       'resources/Audio/Coin.wav',
+  ui_click:   'resources/Audio/UIClick.wav',
 }
