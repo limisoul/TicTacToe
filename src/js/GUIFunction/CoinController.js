@@ -3,6 +3,8 @@
 
 class CoinController {
   constructor() {
+    AudioController.PlaySound(MusicFiles.coin)
+
     this.CreateMask()
 
     DataBase.isAllowClick = false

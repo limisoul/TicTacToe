@@ -50,6 +50,8 @@ class GameBoardController {
 
     // 判断是否可以创建
     if (DataBase.PlaceIsEmpty(position)) {
+      AudioController.PlaySound(MusicFiles.book_page)
+
       const div = this.CreateChessDiv()
 
       // 渲染到GUI
@@ -86,6 +88,8 @@ class GameBoardController {
       }
       /****************** 写内存 ******************/
       Memory.MemSet()
+    } else {
+      AudioController.PlaySound(MusicFiles.blacksmith)
     }
     DataBase.isAllowClick = true
   }

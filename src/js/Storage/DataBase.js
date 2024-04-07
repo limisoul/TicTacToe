@@ -5,7 +5,7 @@ class DataBase {
   static isAllowClick = true
 
   // 是否允许播放声音
-  static isAudioPlay  = true
+  static isAudioPlay  = false
 
   // 0表示没有AI，1为AI先手，2为AI后手
   static AIOrder      = 0

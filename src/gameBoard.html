@@ -11,6 +11,7 @@
   <script src="js/ToolBox/RandomMap.js"></script>
   <script src="js/Storage/DataBase.js"></script>
   <script src="js/Storage/Memory.js"></script>
+  <script src="js/Audio/AudioController.js"></script>
   <script src="js/GUIFunction/GuiAnimator.js"></script>
   <script src="js/GUIFunction/GameBoardController.js"></script>
   <script src="js/GUIFunction/ScoreBoardController.js"></script>
@@ -213,6 +214,9 @@
 <script src="js/ToolBox/Time.js"></script>
 <script src="js/FX/ClickFX.js"></script>
 <script>
+  // 声音相关
+  AudioController.InitBackGround()
+
   const GAME_BOARD  = document.querySelector('#gameBoard')
   const SCORE_BOARD = document.querySelector('#scoreboard')
   const CONSOLE     = document.querySelector('#console')
@@ -262,7 +266,7 @@
   // 控制台UI
   BUTTON.RETURN.innerHTML = `${Unicode.arrow_left}`
   BUTTON.RESET.innerHTML  = `${Unicode.reset}`
-  BUTTON.AUDIO.innerHTML  = `${Unicode.audio_play}`
+  BUTTON.AUDIO.innerHTML  = DataBase.isAudioPlay ? `${Unicode.audio_play}` : `${Unicode.audio_mute}`
   BUTTON.MODE.innerHTML   = isAIMode ? '人机对弈' : '玩家对弈'
 
 
@@ -354,6 +358,8 @@
    * 返回选单
    */
   const Return = function () {
+    AudioController.PlaySound(MusicFiles.ui_click)
+
     GuiAnimator.HiddenElement(SCORE_BOARD)
     GuiAnimator.HiddenElement(GAME_BOARD)
     GuiAnimator.HiddenElement(CONSOLE)
@@ -380,6 +386,8 @@
      * 重置棋盘
      */
     static Reset() {
+      AudioController.PlaySound(MusicFiles.ui_click)
+
       DataBase.isAllowClick = false
 
       // 旋转动画
@@ -436,6 +444,8 @@
     }
 
     static ResetScore() {
+      AudioController.PlaySound(MusicFiles.ui_click)
+
       DataBase.score = [0, 0]
       Memory.MemSet()
 
@@ -463,8 +473,11 @@
    * 声音设置
    */
   const ToggleAudio = function () {
-    DataBase.isAudioPlay = !DataBase.isAudioPlay
+    AudioController.PlaySound(MusicFiles.ui_click)
+
+    DataBase.isAudioPlay  = !DataBase.isAudioPlay
     BUTTON.AUDIO.innerHTML = DataBase.isAudioPlay ? `${Unicode.audio_play}` : `${Unicode.audio_mute}`
+    AudioController.TryPlayBackGround()
   }
 </script>
 </html>
