@@ -29,26 +29,67 @@ class Memory {
 
   /**
    * 读取数据
+   * @return {boolean} 是否读取成功
    */
   static MemLoad () {
-    if (!this.isSaved) return
+    if (!this.isSaved) return false
 
     let buffer = localStorage.getItem('mem')
 
     // 解密
     buffer = this.DecryptString(buffer)
 
+    // 数据暂存缓存，先用于校验
+    const cache = {
+      score: [
+        parseInt(buffer.slice(0, 2)),
+        parseInt(buffer.slice(2, 4))
+      ],
+      AIOrder: parseInt(buffer[4]),
+      currentOrder: parseInt(buffer[5]),
+      boardArray: buffer.slice(6)
+    }
+    if (!this.DataValidation(cache)) {
+      return false
+    }
+
     // 读取比分
-    DataBase.score[0] = parseInt(buffer.slice(0, 2))
-    DataBase.score[1] = parseInt(buffer.slice(2, 4))
+    DataBase.score[0] = cache.score[0]
+    DataBase.score[1] = cache.score[1]
 
     // 读取参数
-    DataBase.AIOrder      = parseInt(buffer[4])
-    DataBase.currentOrder = parseInt(buffer[5])
+    DataBase.AIOrder      = cache.AIOrder
+    DataBase.currentOrder = cache.currentOrder
 
     // 读取棋盘
-    const boardArray = buffer.slice(6).split('')
+    const boardArray = cache.boardArray.split('')
     DataBase.gameBoard = Array.from({ length: 3 }, () => boardArray.splice(0, 3).map(Number))
+    return true
+  }
+
+  /**
+   * 数据校验
+   * @param {{}} data
+   * @return {boolean}
+   */
+  static DataValidation(data) {
+    // 分数校验
+    if (data.score[0] > 99 || data.score[0] < 0 ||
+        data.score[1] > 99 || data.score[1] < 0) {
+          return false
+    }
+
+    // 参数校验
+    if (!/^[0-2]$/.test(data.AIOrder) || !/^[12]$/.test(data.currentOrder)) {
+      return false
+    }
+
+    // 棋盘校验
+    if (!/^[0-2]*$/.test(data.boardArray)) {
+      return false
+    }
+
+    return true
   }
 
   /**
