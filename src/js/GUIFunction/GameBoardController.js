@@ -5,17 +5,17 @@
  */
 class GameBoardController {
   /**
-   * 监听标准化点击位置
+   * 在div上部署监听点击事件，以执行游戏更新
    * @param {HTMLDivElement} gameBoard
    */
   static SetClickPositionEvent (gameBoard) {
-    gameBoard.addEventListener('click', GameBoardController.clickEvent(gameBoard))
+    gameBoard.addEventListener('click', GameBoardController.ClickEvent(gameBoard))
   }
 
   /**
    * @param {HTMLDivElement} gameBoard
    */
-  static clickEvent(gameBoard) {
+  static ClickEvent(gameBoard) {
     return function (event) {
       if (!DataBase.isAllowClick) {
         return
@@ -96,7 +96,7 @@ class GameBoardController {
 
   /**
    * 渲染棋子
-   * @param {number} curr
+   * @param {number} curr 默认渲染当前回合类型的棋子
    * @return {HTMLDivElement}
    */
   static CreateChessDiv(curr = DataBase.currentOrder - 1) {
@@ -119,7 +119,7 @@ class GameBoardController {
 
   /**
    * 创建棋盘线
-   * @param {HTMLDivElement} div
+   * @param {HTMLDivElement} div 创建位置
    */
   static CreateGameBoardLine(div) {
     const BaseLine = function () {

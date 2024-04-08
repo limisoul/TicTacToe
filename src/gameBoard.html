@@ -293,10 +293,10 @@
           // ai
           let times = Math.floor(Math.random() * 4)
 
-          let currentBoard = rotateLeft(DataBase.gameBoard, times)
-          let boardWithBestMove = bestMove(currentBoard, DataBase.AIOrder)
+          let currentBoard = RotateLeft(DataBase.gameBoard, times)
+          let boardWithBestMove = BestMove(currentBoard, DataBase.AIOrder)
           if (boardWithBestMove) {
-            boardWithBestMove = rotateLeft(boardWithBestMove, 4 - times)
+            boardWithBestMove = RotateLeft(boardWithBestMove, 4 - times)
 
             const position = DataBase.CompareDifferences(boardWithBestMove)
             if (position) {

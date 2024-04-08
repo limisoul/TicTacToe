@@ -38,7 +38,7 @@ class Vector2 {
    * @param {Vector2} b
    * @returns {number}
    */
-  static Dot_product(a, b) {
+  static DotProduct(a, b) {
     return a.x * b.x + a.y * b.y
   }
 

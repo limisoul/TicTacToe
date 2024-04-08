@@ -2,23 +2,23 @@
 
 /**
  * 极大极小树
- * @param {number[][]} node
- * @param {number} depth
- * @param {boolean} isMaximizingPlayer
+ * @param {number[][]} node 节点
+ * @param {number} depth 遍历深度
+ * @param {boolean} isMaximizingPlayer 是否为极大化
  * @param {number} alpha
  * @param {number} beta
- * @param {number} player
- * @return {number}
+ * @param {number} player 需要判别的先后方，1或2
+ * @return {number} 分数
  */
-function minimax(node, depth, isMaximizingPlayer, alpha, beta, player) {
-  if (depth === 0 || isGameOver(node, player)) {
-    return evaluateBoard(node, player)
+function Minimax(node, depth, isMaximizingPlayer, alpha, beta, player) {
+  if (depth === 0 || IsGameOver(node, player)) {
+    return EvaluateBoard(node, player)
   }
 
   if (isMaximizingPlayer) {
     let maxEval = -Infinity
-    for (const child of getChildren(node, player)) {
-      const eval = minimax(child, depth - 1, false, alpha, beta, player) / 2
+    for (const child of GetChildren(node, player)) {
+      const eval = Minimax(child, depth - 1, false, alpha, beta, player) / 2
       maxEval = Math.max(maxEval, eval)
       alpha = Math.max(alpha, eval)
       if (beta <= alpha) {
@@ -28,8 +28,8 @@ function minimax(node, depth, isMaximizingPlayer, alpha, beta, player) {
     return maxEval
   } else {
     let minEval = Infinity
-    for (const child of getChildren(node, player ^ 3)) {
-      const eval = minimax(child, depth - 1, true, alpha, beta, player) / 2
+    for (const child of GetChildren(node, player ^ 3)) {
+      const eval = Minimax(child, depth - 1, true, alpha, beta, player) / 2
       minEval = Math.min(minEval, eval)
       beta = Math.min(beta, eval)
       if(beta <= alpha) {
@@ -43,11 +43,11 @@ function minimax(node, depth, isMaximizingPlayer, alpha, beta, player) {
 
 /**
  * 计算分数
- * @param {number[][]} board
- * @param {number} player
- * @return {number}
+ * @param {number[][]} board 判别盘面
+ * @param {number} player 需要判别的先后方，1或2
+ * @return {number} 分数
  */
-function evaluateBoard(board, player) {
+function EvaluateBoard(board, player) {
   if (DataBase.currIsWin(board, player)) {
     return 10
   } else if (DataBase.currIsWin(board, player ^ 3)) {
@@ -60,11 +60,11 @@ function evaluateBoard(board, player) {
 
 /**
  * 获取所有可能的子盘
- * @param {number[][]} board
- * @param {number} player
- * @return {[number[][]]}
+ * @param {number[][]} board 所需盘面
+ * @param {number} player 下一步的先后方，1或2
+ * @return {[number[][]]} 所有下一步可以走的盘面
  */
-function getChildren(board, player) {
+function GetChildren(board, player) {
   const children = []
   for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
@@ -87,22 +87,22 @@ function getChildren(board, player) {
  * @param {number} player
  * @return {boolean}
  */
-function isGameOver(board, player) {
-  return evaluateBoard(board, player) !== 0 || board.every(row => row.every(cell => cell !== 0))
+function IsGameOver(board, player) {
+  return EvaluateBoard(board, player) !== 0 || board.every(row => row.every(cell => cell !== 0))
 }
 
 
 /**
  * 计算最佳落子
- * @param {number[][]} board
- * @param player
- * @return {number[][]}
+ * @param {number[][]} board 当前盘面
+ * @param player 需要计算的先后方，1或2
+ * @return {number[][]} 最佳位置的盘面
  */
-function bestMove(board, player) {
+function BestMove(board, player) {
   let bestEval = -Infinity
   let move
-  for (const child of getChildren(board, player)) {
-    const eval = minimax(child, 5, false, -Infinity, Infinity, player) // 假设AI是极大化玩家
+  for (const child of GetChildren(board, player)) {
+    const eval = Minimax(child, 5, false, -Infinity, Infinity, player) // 假设AI是极大化玩家
     if (eval > bestEval) {
       bestEval = eval
       move = child // 储存最好的移动
@@ -116,9 +116,9 @@ function bestMove(board, player) {
  * 左旋整个棋盘
  * @param {number[][]} board
  * @param {number} n 旋转次数
- * @return {number[][]}
+ * @return {number[][]} 旋转后的棋盘
  */
-function rotateLeft(board, n) {
+function RotateLeft(board, n) {
   n = n % 4
   const length = 3
   while (n-- > 0) {

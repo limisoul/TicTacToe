@@ -8,7 +8,7 @@ class ScoreBoardController {
 
   /**
    * 加载分数
-   * @param {HTMLDivElement} scoreboard
+   * @param {HTMLDivElement} scoreboard 第一次需要传参
    */
   static LoadScore(scoreboard = this.scoreboard) {
     this.scoreboard = scoreboard

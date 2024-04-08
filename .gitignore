@@ -5,6 +5,7 @@ node_modules
 dist
 .cache
 .idea
+.DS_Store
 
 # word缓存
 \~\$*

@@ -23,7 +23,7 @@ class AudioController {
 
   /**
    * 播放音频文件
-   * @param {string} file
+   * @param {string} file 从MusicFiles中选择
    */
   static PlaySound(file) {
     if (!DataBase.isAudioPlay) return
